@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = 'https://monkeytype-uqby.onrender.comi';
+const url = 'https://monkeytype-uqby.onrender.com';
 
 export const axiosInstance = axios.create({
   baseURL: url,

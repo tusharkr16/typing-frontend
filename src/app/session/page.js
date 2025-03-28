@@ -1,7 +1,9 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Head from 'next/head';
+
 import dynamic from 'next/dynamic';
+import { useRouter } from "next/navigation";
 import { axiosInstance } from '@/network/axiosInstance';
 
 const sampleTexts = [
@@ -11,6 +13,7 @@ const sampleTexts = [
   "The 7 wonders of the world include the Great Pyramid of Giza and the Hanging Gardens of Babylon. 3.14 is the value of pi.",
   "She sells seashells by the seashore. How much wood would a woodchuck chuck if a woodchuck could chuck wood?"
 ];
+
 
 const TypingTestUI = dynamic(() => Promise.resolve(({
   text,
@@ -25,7 +28,8 @@ const TypingTestUI = dynamic(() => Promise.resolve(({
   endTest,
   resetTest,
   setSelectedText,
-  inputRef
+  inputRef,
+  router
 }) => (
   <div className="max-w-3xl mx-auto">
     <div className="text-center mb-8">
@@ -63,12 +67,20 @@ const TypingTestUI = dynamic(() => Promise.resolve(({
           </div>
 
           {!isTyping ? (
+            <>
             <button
               onClick={startTest}
               className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-md shadow-sm transition-colors"
             >
               Start Test
             </button>
+            <button
+            onClick={() => router.push('/dashboard')} 
+            className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-md shadow-sm transition-colors"
+          >
+            Dashboard
+          </button>
+          </>
           ) : (
             <button
               onClick={endTest}
@@ -202,7 +214,7 @@ export default function TypingTest() {
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
-  const [timer, setTimer] = useState(30);
+  const [timer, setTimer] = useState(15);
   const [timerActive, setTimerActive] = useState(false);
   const [results, setResults] = useState(null);
   const [selectedText, setSelectedText] = useState(0);
@@ -210,6 +222,7 @@ export default function TypingTest() {
   const [typingDurations, setTypingDurations] = useState([]);
   const [isClient, setIsClient] = useState(false);
   const inputRef = useRef(null);
+  const router = useRouter();
 
   useEffect(() => {
     setIsClient(true);
@@ -220,7 +233,7 @@ export default function TypingTest() {
     if (!isClient) return;
     
     try {
-      const response = await axiosInstance.post('/sessions/sessions', {
+      const response = await axiosInstance.post('api/sessions/sessions', {
         wpm: data.wpm,
         accuracy: data.accuracy,
         totalErrors: data.totalErrors,
@@ -307,7 +320,7 @@ export default function TypingTest() {
     setResults(null);
     setErrorWords([]);
     setTypingDurations([]);
-    setTimer(30);
+    setTimer(15);
     if (inputRef.current) inputRef.current.focus();
   }, [inputRef]);
 
@@ -316,7 +329,7 @@ export default function TypingTest() {
     setStartTime(null);
     setEndTime(null);
     setIsTyping(false);
-    setTimer(30);
+    setTimer(15);
     setTimerActive(false);
     setResults(null);
     setErrorWords([]);
@@ -358,6 +371,7 @@ export default function TypingTest() {
       <Head>
         <title>Typing Performance Test</title>
         <meta name="description" content="Measure your typing speed and accuracy" />
+
       </Head>
 
       {isClient ? (
@@ -375,6 +389,7 @@ export default function TypingTest() {
           resetTest={resetTest}
           setSelectedText={setSelectedText}
           inputRef={inputRef}
+          router={router}
         />
       ) : (
         <div className="max-w-3xl mx-auto">

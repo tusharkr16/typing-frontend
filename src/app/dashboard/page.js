@@ -12,7 +12,7 @@ export default function SessionHistory() {
   useEffect(() => {
     const fetchSessions = async () => {
       try {
-        const response = await axiosInstance.get('/sessions/all-session');
+        const response = await axiosInstance.get('api/sessions/all-session');
         setSessions(response.data);
         setError(null);
       } catch (err) {
