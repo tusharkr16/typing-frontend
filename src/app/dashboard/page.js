@@ -26,7 +26,7 @@ export default function SessionHistory() {
     fetchSessions();
   }, []);
 
-  // Format date for display
+ 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -71,7 +71,7 @@ export default function SessionHistory() {
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Your Typing Sessions</h1>
           <Link
-            href="/typing-test"
+            href="/session"
             className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
           >
             New Test
